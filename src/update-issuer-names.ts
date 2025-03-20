@@ -34,7 +34,7 @@ export async function updateIssuerNames() {
 
   const response = await axiosVault.request({
     method: 'LIST',
-    url: '/v1/pki/issuers'
+    url: '/v1/pki_hardware/issuers'
   })
   console.log('response.status', response.status)
   console.log('response.statusText', response.statusText)
