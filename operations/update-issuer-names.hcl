@@ -21,6 +21,8 @@ job "update-issuer-names" {
         volumes = [
           "local/vault-ca.crt:/etc/ssl/certs/vault-ca.crt"
         ]
+        entrypoint = [ "npx" ]
+        args = [ "tsx", "src/update-issuer-names.ts" ]
       }
 
       resources {

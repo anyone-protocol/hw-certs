@@ -6,7 +6,7 @@ export async function updateIssuerNames() {
   const axiosVault = axios.create({
     baseURL: process.env.VAULT_ADDR,
     httpsAgent: new https.Agent({
-      ca: fs.readFileSync('/etc/ssl/certs/vault-ca.cert')
+      ca: fs.readFileSync('/etc/ssl/certs/vault-ca.crt')
     })
   })
 
