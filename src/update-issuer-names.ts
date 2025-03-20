@@ -7,7 +7,10 @@ export async function updateIssuerNames() {
     baseURL: process.env.VAULT_ADDR,
     httpsAgent: new https.Agent({
       ca: fs.readFileSync('/etc/ssl/certs/vault-ca.crt')
-    })
+    }),
+    headers: {
+      'X-Vault-Token': process.env.VAULT_TOKEN
+    }
   })
 
   const response = await axiosVault.get('/v1/auth/token/lookup-self')
