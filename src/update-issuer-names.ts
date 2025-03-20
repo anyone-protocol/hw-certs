@@ -33,7 +33,7 @@ export async function updateIssuerNames() {
   const axiosVault = await setupVaultAxios()
 
   const response = await axiosVault.request({
-    method: 'list',
+    method: 'LIST',
     url: '/v1/pki/issuers'
   })
   console.log('response.status', response.status)
