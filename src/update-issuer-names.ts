@@ -13,18 +13,18 @@ export async function setupVaultAxios() {
     }
   })
 
-  const response = await axiosVault.post('/v1/auth/token/renew-self', {
-    increment: '2h'
-  })
+  // const response = await axiosVault.post('/v1/auth/token/renew-self', {
+  //   increment: '2h'
+  // })
 
-  console.log('renew-self response.status', response.status)
-  console.log('renew-self response.statusText', response.statusText)
-  console.log('renew-self response.data', response.data)
+  // console.log('renew-self response.status', response.status)
+  // console.log('renew-self response.statusText', response.statusText)
+  // console.log('renew-self response.data', response.data)
 
-  if (response.data && response.data.auth && response.data.auth.client_token) {
-    const { auth: { client_token } } = response.data
-    axiosVault.defaults.headers['X-Vault-Token'] = client_token
-  }
+  // if (response.data && response.data.auth && response.data.auth.client_token) {
+  //   const { auth: { client_token } } = response.data
+  //   axiosVault.defaults.headers['X-Vault-Token'] = client_token
+  // }
 
   return axiosVault
 }
@@ -32,7 +32,10 @@ export async function setupVaultAxios() {
 export async function updateIssuerNames() {
   const axiosVault = await setupVaultAxios()
 
-  const response = await axiosVault.get('/v1/auth/token/lookup-self')
+  const response = await axiosVault.request({
+    method: 'list',
+    url: '/v1/pki/issuers'
+  })
   console.log('response.status', response.status)
   console.log('response.statusText', response.statusText)
   console.log('response.data', response.data)
