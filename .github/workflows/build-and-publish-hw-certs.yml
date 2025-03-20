@@ -1,0 +1,26 @@
+name: build-and-publish-hw-certs
+on:
+  push:
+    branches: master
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        run: docker build . --file Dockerfile --tag hw-certs --label "runnumber=${{ github.run_id }}"
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/anyone-protocol/hw-certs
+          VERSION=latest
+          SHA=${{ github.sha }}
+
+          docker tag hw-certs $IMAGE_ID:$SHA
+          docker tag hw-certs $IMAGE_ID:latest
+          docker push $IMAGE_ID:$SHA
+          docker push $IMAGE_ID:latest
