@@ -36,9 +36,19 @@ export async function updateIssuerNames() {
     method: 'LIST',
     url: '/v1/pki_hardware/issuers'
   })
-  console.log('response.status', response.status)
-  console.log('response.statusText', response.statusText)
-  console.log('response.data', response.data)
+  
+  if (response.data && response.data.data) {
+    const { key_info } = response.data.data
+
+    const issuers = Object.keys(key_info).map(key_id => ({ key_id, ...key_info[key_id] }))
+    const issuersToUpdate = issuers.filter(issuer => !issuer.name)
+    const issuersWithNames = issuers.filter(issuer => issuer.name)
+
+    console.log(`Found ${issuers.length} issuers`)
+    console.log(`Found ${issuersToUpdate.length} issuers without names needing update`)
+    console.log(`Found ${issuersWithNames.length} issuers with names`)
+    console.log('issuersWithNames', issuersWithNames)
+  }
 }
 
 updateIssuerNames().catch((err) => { console.error(err); process.exit(1) })
