@@ -46,13 +46,17 @@ export async function updateIssuerNames() {
       name: issuer.issuer_name
     })))
 
-    // for (const { issuer_ref, serial_number } of issuersToUpdate) {
-    //   const newName = (serial_number as string).replace(/:/g, '')
-    //   await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
-    //     issuer_name: newName
-    //   }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
-    //   console.log(`Updated issuer ${issuer_ref} with name ${newName}`)
-    // }
+    for (const { issuer_ref, serial_number } of issuersToUpdate) {
+      const res = await axiosVault.get(`/v1/pki_hardware/issuer/${issuer_ref}`)
+      const issuer = res.data.data
+      console.log('issuer', JSON.stringify(issuer))
+
+      // const newName = (serial_number as string).replace(/:/g, '')
+      // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
+      //   issuer_name: newName
+      // }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
+      // console.log(`Updated issuer ${issuer_ref} with name ${newName}`)
+    }
   }
 }
 
