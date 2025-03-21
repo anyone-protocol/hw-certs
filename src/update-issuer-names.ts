@@ -30,22 +30,26 @@ export async function updateIssuerNames() {
     const issuers = Object
       .keys(key_info)
       .map(issuer_ref => ({ issuer_ref, ...key_info[issuer_ref] }))
-    const issuersToUpdate = issuers.filter(issuer => !issuer.issuer_name)
-    const issuersWithNames = issuers.filter(issuer => issuer.issuer_name)
+    const issuersToUpdate = issuers.filter(
+      issuer =>
+        !issuer.issuer_name ||
+          issuer.issuer_name ===
+            (issuer.serial_number as string).replace(/:/g, '')
+    )
 
     console.log(`Found ${issuers.length} issuers`)
     console.log(
       `Found ${issuersToUpdate.length} issuers without names needing update`
     )
-    console.log(`Found ${issuersWithNames.length} issuers with names`)
+    console.log(issuersToUpdate.map(issuer => issuer.issuer_ref))
 
-    for (const { issuer_ref, serial_number } of issuersToUpdate) {
-      const newName = (serial_number as string).replace(/:/g, '')
-      await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
-        issuer_name: newName
-      }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
-      console.log(`Updated issuer ${issuer_ref} with name ${newName}`)
-    }
+    // for (const { issuer_ref, serial_number } of issuersToUpdate) {
+    //   const newName = (serial_number as string).replace(/:/g, '')
+    //   await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
+    //     issuer_name: newName
+    //   }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
+    //   console.log(`Updated issuer ${issuer_ref} with name ${newName}`)
+    // }
   }
 }
 
