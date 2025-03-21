@@ -13,19 +13,6 @@ export async function setupVaultAxios() {
     }
   })
 
-  // const response = await axiosVault.post('/v1/auth/token/renew-self', {
-  //   increment: '2h'
-  // })
-
-  // console.log('renew-self response.status', response.status)
-  // console.log('renew-self response.statusText', response.statusText)
-  // console.log('renew-self response.data', response.data)
-
-  // if (response.data && response.data.auth && response.data.auth.client_token) {
-  //   const { auth: { client_token } } = response.data
-  //   axiosVault.defaults.headers['X-Vault-Token'] = client_token
-  // }
-
   return axiosVault
 }
 
@@ -47,7 +34,9 @@ export async function updateIssuerNames() {
     const issuersWithNames = issuers.filter(issuer => issuer.issuer_name)
 
     console.log(`Found ${issuers.length} issuers`)
-    console.log(`Found ${issuersToUpdate.length} issuers without names needing update`)
+    console.log(
+      `Found ${issuersToUpdate.length} issuers without names needing update`
+    )
     console.log(`Found ${issuersWithNames.length} issuers with names`)
     console.log('issuersWithNames', issuersWithNames)
 
