@@ -43,7 +43,7 @@ export async function updateIssuerNames() {
     for (const { issuer_ref, serial_number } of issuersToUpdate) {
       await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
         issuer_name: (serial_number as string).replace(/:/g, '')
-      })
+      }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
       console.log(`Updated issuer ${issuer_ref} with name ${serial_number}`)
     }
   }
