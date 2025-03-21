@@ -50,7 +50,7 @@ export async function updateIssuerNames() {
       const legacyCert = cert.toLegacyObject()
 
       console.log(
-        `Issuer [${issuer_ref}][$${issuer_name}] has cert with subject [${cert.subject}] and ext_key_usage [${legacyCert.ext_key_usage}]`
+        `Issuer [${issuer_ref}][${issuer_name}] has cert with subject [${cert.subject}] and keyUsage [${cert.keyUsage}]`
       )
 
       // const newName = (serial_number as string).replace(/:/g, '')
