@@ -49,7 +49,7 @@ export async function updateIssuerNames() {
     console.log(`Found ${issuersWithNames.length} issuers with names`)
     console.log('issuersWithNames', issuersWithNames)
 
-    const readFirstIssuerResponse = await axiosVault.get(`/pki/issuer/${issuersWithNames[0].issuer_ref}/json`)
+    const readFirstIssuerResponse = await axiosVault.get(`/pki/issuer/${issuersWithNames[0].key_id}/json`)
     console.log('readFirstIssuerResponse', readFirstIssuerResponse.data)
   }
 }
