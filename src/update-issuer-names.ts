@@ -40,7 +40,9 @@ export async function updateIssuerNames() {
   if (response.data && response.data.data) {
     const { key_info } = response.data.data
 
-    const issuers = Object.keys(key_info).map(issuer_ref => ({ issuer_ref, ...key_info[issuer_ref] }))
+    const issuers = Object
+      .keys(key_info)
+      .map(issuer_ref => ({ issuer_ref, ...key_info[issuer_ref] }))
     const issuersToUpdate = issuers.filter(issuer => !issuer.issuer_name)
     const issuersWithNames = issuers.filter(issuer => issuer.issuer_name)
 
