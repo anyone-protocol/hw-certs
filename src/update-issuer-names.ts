@@ -49,8 +49,12 @@ export async function updateIssuerNames() {
     console.log(`Found ${issuersWithNames.length} issuers with names`)
     console.log('issuersWithNames', issuersWithNames)
 
-    const readFirstIssuerResponse = await axiosVault.get(`/v1/pki_hardware/issuer/${issuersWithNames[0].issuer_ref}/json`)
-    console.log('readFirstIssuerResponse', readFirstIssuerResponse.data)
+    for (const { issuer_ref, serial_number } of issuersToUpdate) {
+      await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}/update`, {
+        issuer_name: serial_number
+      })
+      console.log(`Updated issuer ${issuer_ref} with name ${serial_number}`)
+    }
   }
 }
 
