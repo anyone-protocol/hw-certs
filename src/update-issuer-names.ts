@@ -47,8 +47,11 @@ export async function updateIssuerNames() {
       const res = await axiosVault.get(`/v1/pki_hardware/issuer/${issuer_ref}`)
       const issuer = res.data.data
       const cert = new crypto.X509Certificate(Buffer.from(issuer.certificate))
+      const legacyCert = cert.toLegacyObject()
 
-      console.log(`Issuer [${issuer_ref}][$${issuer_name}] has cert with subject [${cert.subject}]`)
+      console.log(
+        `Issuer [${issuer_ref}][$${issuer_name}] has cert with subject [${cert.subject}] and ext_key_usage [${legacyCert.ext_key_usage}]`
+      )
 
       // const newName = (serial_number as string).replace(/:/g, '')
       // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
