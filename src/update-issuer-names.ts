@@ -38,7 +38,6 @@ export async function updateIssuerNames() {
       `Found ${issuersToUpdate.length} issuers without names needing update`
     )
     console.log(`Found ${issuersWithNames.length} issuers with names`)
-    console.log('issuersWithNames', issuersWithNames)
 
     for (const { issuer_ref, serial_number } of issuersToUpdate) {
       const newName = (serial_number as string).replace(/:/g, '')
