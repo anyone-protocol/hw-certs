@@ -40,7 +40,7 @@ export async function updateIssuerNames() {
   if (response.data && response.data.data) {
     const { key_info } = response.data.data
 
-    const issuers = Object.keys(key_info).map(key_id => ({ key_id, ...key_info[key_id] }))
+    const issuers = Object.keys(key_info).map(issuer_ref => ({ issuer_ref, ...key_info[issuer_ref] }))
     const issuersToUpdate = issuers.filter(issuer => !issuer.issuer_name)
     const issuersWithNames = issuers.filter(issuer => issuer.issuer_name)
 
@@ -48,6 +48,9 @@ export async function updateIssuerNames() {
     console.log(`Found ${issuersToUpdate.length} issuers without names needing update`)
     console.log(`Found ${issuersWithNames.length} issuers with names`)
     console.log('issuersWithNames', issuersWithNames)
+
+    const readFirstIssuerResponse = await axiosVault.get(`/pki/issuer/${issuersWithNames[0].issuer_ref}/json`)
+    console.log('readFirstIssuerResponse', readFirstIssuerResponse.data)
   }
 }
 
