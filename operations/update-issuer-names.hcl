@@ -18,11 +18,17 @@ job "update-issuer-names" {
       config {
         image = "ghcr.io/anyone-protocol/hw-certs:latest"
         force_pull = true
-        volumes = [
-          "local/vault-ca.crt:/etc/ssl/certs/vault-ca.crt"
-        ]
         entrypoint = [ "npx" ]
         args = [ "tsx", "src/update-issuer-names.ts" ]
+        mount {
+          type = "bind"
+          target = "/etc/ssl/certs/vault-ca.crt"
+          source = "/opt/nomad/tls/vault-ca.crt"
+          readonly = true
+          bind_options {
+            propagation = "private"
+          }
+        }
       }
 
       resources {
@@ -45,16 +51,12 @@ job "update-issuer-names" {
 
       template {
         data = <<-EOH
-        VAULT_ADDR="TODO"
+        {{with secret "kv/vault"}}
+        VAULT_ADDR="{{.Data.data.VAULT_ADDR}}"
+        {{end}}
         EOH
         destination = "secrets/env"
         env         = true
-      }
-
-      template {
-        data = <<-EOH
-        EOH
-        destination = "local/vault-ca.crt"
       }
     }
   }

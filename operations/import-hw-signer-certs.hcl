@@ -32,9 +32,15 @@ job "import-hw-signer-certs" {
           "-d@/certs/certs.json",
           "${VAULT_ADDR}/v1/pki_hardware/intermediate/set-signed"
         ]
-        volumes = [
-          "local/vault-ca.crt:/etc/ssl/certs/vault-ca.crt"
-        ]
+        mount {
+          type = "bind"
+          target = "/etc/ssl/certs/vault-ca.crt"
+          source = "/opt/nomad/tls/vault-ca.crt"
+          readonly = true
+          bind_options {
+            propagation = "private"
+          }
+        }
       }
 
       volume_mount {
@@ -63,16 +69,12 @@ job "import-hw-signer-certs" {
 
       template {
         data = <<-EOH
-        VAULT_ADDR="TODO"
+        {{with secret "kv/vault"}}
+        VAULT_ADDR="{{.Data.data.VAULT_ADDR}}"
+        {{end}}
         EOH
         destination = "secrets/env"
         env         = true
-      }
-
-      template {
-        data = <<-EOH
-        EOH
-        destination = "local/vault-ca.crt"
       }
     }
   }
