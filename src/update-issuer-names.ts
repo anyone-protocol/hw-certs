@@ -2,7 +2,7 @@ import axios from 'axios'
 import https from 'https'
 import fs from 'fs'
 import crypto from 'crypto'
-import * as forge from 'node-forge'
+import forge from 'node-forge'
 
 export async function setupVaultAxios() {
   const axiosVault = axios.create({
