@@ -55,12 +55,11 @@ export async function updateIssuerNames() {
         line => line.includes('X509v3 Subject Key Identifier:')
       )
       const ski = opensslResultLines[skiHeaderLine + 1].trim()
-      console.log(`Issuer [${issuer_ref}][${serial_number}][${issuer_name}] SKI: ${ski}`)
-      // const newName = (serial_number as string).replace(/:/g, '')
-      // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
-      //   issuer_name: newName
-      // }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
-      // console.log(`Updated issuer ${issuer_ref} with name ${newName}`)
+      const newName = ski
+      await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
+        issuer_name: newName
+      }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
+      console.log(`Updated issuer [${issuer_ref}] with name [${newName}]`)
     }
   }
 }
