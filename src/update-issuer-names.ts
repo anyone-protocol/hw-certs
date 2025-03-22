@@ -43,7 +43,7 @@ export async function updateIssuerNames() {
       `Found ${issuersToUpdate.length} issuers with names needing update`
     )
 
-    for (const { issuer_ref, issuer_name } of issuersToUpdate) {
+    for (const { issuer_ref, serial_number, issuer_name } of issuersToUpdate) {
       const res = await axiosVault.get(`/v1/pki_hardware/issuer/${issuer_ref}`)
       const issuer = res.data.data
       const opensslResult = execSync(
@@ -55,7 +55,7 @@ export async function updateIssuerNames() {
         line => line.includes('X509v3 Subject Key Identifier:')
       )
       const ski = opensslResultLines[skiHeaderLine + 1].trim()
-      console.log(`Issuer [${issuer_ref}][${issuer_name}] SKI: ${ski}`)
+      console.log(`Issuer [${issuer_ref}][${serial_number}][${issuer_name}] SKI: ${ski}`)
       // const newName = (serial_number as string).replace(/:/g, '')
       // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
       //   issuer_name: newName
