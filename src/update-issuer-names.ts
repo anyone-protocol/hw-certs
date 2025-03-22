@@ -49,13 +49,13 @@ export async function updateIssuerNames() {
       const opensslResult = execSync(
         `echo "${issuer.certificate}" | openssl x509 -text -noout`
       )
-      // Extract just the X509v3 extensions section
-      const extensionsMatch = opensslResult.toString().match(/X509v3 extensions:([\s\S]*?)(?:Signature Algorithm:|$)/)
-      if (extensionsMatch && extensionsMatch[1]) {
-        console.log('X509v3 Extensions:')
-        console.log(extensionsMatch[1].trim())
-      }
+      const opensslResultLines = opensslResult.toString().split('\n')
 
+      const skiHeaderLine = opensslResultLines.findIndex(
+        line => line.includes('X509v3 Subject Key Identifier:')
+      )
+      const ski = opensslResultLines[skiHeaderLine + 1].trim()
+      console.log(`Issuer [${issuer_ref}][${issuer_name}] SKI: ${ski}`)
       // const newName = (serial_number as string).replace(/:/g, '')
       // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
       //   issuer_name: newName
