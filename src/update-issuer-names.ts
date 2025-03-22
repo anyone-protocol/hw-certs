@@ -1,8 +1,7 @@
 import axios from 'axios'
 import https from 'https'
 import fs from 'fs'
-import crypto from 'crypto'
-import forge from 'node-forge'
+import { execSync } from 'child_process'
 
 export async function setupVaultAxios() {
   const axiosVault = axios.create({
@@ -47,11 +46,13 @@ export async function updateIssuerNames() {
     for (const { issuer_ref, issuer_name } of issuersToUpdate) {
       const res = await axiosVault.get(`/v1/pki_hardware/issuer/${issuer_ref}`)
       const issuer = res.data.data
-      const cert = forge.pki.certificateFromPem(issuer.certificate)
-      const ski = cert.getExtension('subjectKeyIdentifier')
-      console.log(
-        `Issuer [${issuer_ref}][${issuer_name}] has cert with SKI [${ski}]`
+      const opensslResult = execSync(
+        `echo "${issuer.certificate}" | openssl x509 -text -noout`
       )
+      console.log(
+        `Issuer [${issuer_ref}][${issuer_name}] has cert:`
+      )
+      console.log(opensslResult.toString())
 
       // const newName = (serial_number as string).replace(/:/g, '')
       // await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
