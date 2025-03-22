@@ -34,6 +34,7 @@ export async function updateIssuerNames() {
     const issuersToUpdate = issuers.filter(
       issuer =>
         !issuer.issuer_name ||
+          // NB: fix for initially setting issuer_name to massaged serial number
           issuer.issuer_name ===
             (issuer.serial_number as string).replace(/:/g, '')
     )
@@ -43,7 +44,7 @@ export async function updateIssuerNames() {
       `Found ${issuersToUpdate.length} issuers with names needing update`
     )
 
-    for (const { issuer_ref, serial_number, issuer_name } of issuersToUpdate) {
+    for (const { issuer_ref } of issuersToUpdate) {
       const res = await axiosVault.get(`/v1/pki_hardware/issuer/${issuer_ref}`)
       const issuer = res.data.data
       const opensslResult = execSync(
@@ -55,11 +56,10 @@ export async function updateIssuerNames() {
         line => line.includes('X509v3 Subject Key Identifier:')
       )
       const ski = opensslResultLines[skiHeaderLine + 1].trim()
-      const newName = ski
       await axiosVault.patch(`/v1/pki_hardware/issuer/${issuer_ref}`, {
-        issuer_name: newName
+        issuer_name: ski.replace(/:/g, '')
       }, { headers: { 'Content-Type': 'application/merge-patch+json'} })
-      console.log(`Updated issuer [${issuer_ref}] with name [${newName}]`)
+      console.log(`Updated issuer [${issuer_ref}] with name [${ski}]`)
     }
   }
 }
